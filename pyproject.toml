@@ -2,10 +2,10 @@
 name = "src"
 version = "0.0.1"
 description = "An MLOPs project for productionizing models"
-author = [{name = "Anubhav Trivedi", email = "anubhav.trivedi@64gmail.com"}]
+authors = [{name = "Anubhav Trivedi", email = "anubhav.trivedi@64gmail.com"}]
 
 [tool.setuptools]
 packages = {find={}}
 
 [tool.setuptools.dynamic]
-dependencies = {file = 'requirements.txt}
+dependencies = {file = 'requirements.txt'}
