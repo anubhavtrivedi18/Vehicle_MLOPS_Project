@@ -1,10 +1,8 @@
-from src.logger import logging
-from src.exception import MyException
-import sys
+from src.components.data_ingestion import DataIngestion
 
-try:
-    a = 1+'Z'
+if __name__ == "__main__":
+    data_ingestion = DataIngestion()
 
-except Exception as e:
-    logging.info(e)
-    raise MyException(e,sys) from e
+    data_ingestion_artifact = data_ingestion.initiate_data_ingestion()
+
+    print(data_ingestion_artifact)

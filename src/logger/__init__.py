@@ -4,43 +4,54 @@ from logging.handlers import RotatingFileHandler
 from from_root import from_root
 from datetime import datetime
 
-# Constants for log Configuration
-
-LOG_DIR = 'logs'
+# Constants for log configuration
+LOG_DIR = "logs"
 LOG_FILE = f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"
-MAX_LOG_SIZE = 5*1024*1024
-BACKUP_COUNT = 3 # Number of backup log files to keep
+MAX_LOG_SIZE = 5 * 1024 * 1024  # 5 MB
+BACKUP_COUNT = 3
 
-#Construct log file path
-log_dir_path = os.path.join(from_root(),LOG_DIR)
-os.makedirs(log_dir_path,exist_ok = True)
-log_file_path = os.path.join(log_dir_path,LOG_FILE)
+# Construct log file path
+log_dir_path = os.path.join(from_root(), LOG_DIR)
+os.makedirs(log_dir_path, exist_ok=True)
+
+log_file_path = os.path.join(log_dir_path, LOG_FILE)
+
 
 def configure_logger():
-
     """
-    Configures logging with a rotating file Handler and a Console Handler
+    Configures logging with a rotating file handler and a console handler.
     """
 
-    # Create Custom Logger
     logger = logging.getLogger()
+
+    # Prevent duplicate handlers
+    if logger.handlers:
+        return
+
     logger.setLevel(logging.DEBUG)
 
-    # Define Formatter
-    formatter = logging.Formatter("[%(asctime)s] %(name)s - %(levelname)s - %(message)s")
+    formatter = logging.Formatter(
+        "[%(asctime)s] %(filename)s:%(lineno)d %(levelname)s - %(message)s"
+    )
 
-    # File Handler with rotation
-    file_handler = RotatingFileHandler(log_file_path, maxBytes=MAX_LOG_SIZE, backupCount=BACKUP_COUNT)
-    file_handler.setFormatter(formatter)
+    # File handler
+    file_handler = RotatingFileHandler(
+        log_file_path,
+        maxBytes=MAX_LOG_SIZE,
+        backupCount=BACKUP_COUNT
+    )
     file_handler.setLevel(logging.DEBUG)
-    logger.addHandler(file_handler)
-    
-
+    file_handler.setFormatter(formatter)
 
     # Console handler
     console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.DEBUG)
     console_handler.setFormatter(formatter)
+
+    logger.addHandler(file_handler)
     logger.addHandler(console_handler)
-    
+
+
 configure_logger()
-                                     
+
+logging = logging.getLogger()                 
