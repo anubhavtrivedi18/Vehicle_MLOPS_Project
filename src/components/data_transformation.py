@@ -11,7 +11,7 @@ from src.entity.config_entity import DataTransformationConfig
 from src.entity.artifact_entity import DataTransformationArtifact, DataIngestionArtifact, DataValidationArtifact
 from src.exception import MyException
 from src.logger import logging
-from src.utils.main_utils import read_yaml_files, save_object, save_numpy
+from src.utils.main_utils import read_yaml_files, save_object, save_numpy_array_data
 
 
 
@@ -88,9 +88,9 @@ class DataTransformation:
         df = pd.get_dummies(df, drop_first=True)
         return df
     def _rename_columns(self,df):
-        """"
-        Rename specific columns and ensure integer type for dummy columns.
-        """"
+        """
+        Rename specific columns and ensure integer type for dummy columns
+        """
 
         logging.info("Renaming specific columns aand casting to int")
         df = df.rename(columns={
@@ -141,6 +141,54 @@ class DataTransformation:
             input_features_train_df = self.drop_id_column(input_features_train_df)
             input_features_train_df = self.create_dummy_columns(input_features_train_df)
             input_features_train_df = self.rename_columns(input_features_train_df)
-       
+
+            input_feature_test_df = self._map_gender_column(input_feature_test_df)
+            input_feature_test_df = self._drop_id_column(input_feature_test_df)
+            input_feature_test_df = self._create_dummy_columns(input_feature_test_df)
+            input_feature_test_df = self._rename_columns(input_features_train_df)
+
+            logging.info('Custom transformation applied to train and test data')
+
+            logging.info("starting data transformation")
+            preprocessor = self.get_data_transformer_object()
+            logging.info('Got the preprocessing object')
+
+            logging.info("Initializing transformation for Training-data")
+            input_feature_train_arr = preprocessor.fit_transform(input_features_train_df)
+            logging.info("Initializing trnasformtion for Testing-data")
+            input_feature_test_arr = preprocessor.transform(input_feature_test_df)
+            logging.info("Transformation done end to end train-test df.")
+
+            logging.info("Applying SMOTEENN for handling imbalanced dataset.")
+            smt = SMOTETomek("Applying SMOTETomek for handling imbalanced dataset.")
+            input_feature_train_final,target_feature_train_final = smt.fit_resample(
+                input_features_train_df,target_feature_train_df
+            )
+            input_feature_test_final,target_feature_test_final = smt.fit_resample(
+                input_feature_test_df,target_feature_train_df
+            )
+            logging.info("SMOTEEN applied to train-test df.")
+
+            train_arr = np.c_[input_feature_train_final,np.array(target_feature_train_final)]
+            test_arr = np.c_[input_feature_test_final, np.array(target_feature_test_final)]
+
+            logging.info('feature-target concatenation done for train-test df.')
+
+
+            save_object(self.data_transformation_config.transformed_object_file_path,preprocessor)
+            save_numpy_array_data(self.data_transformation_config.transformed_train_file_path, array=train_arr)
+            save_numpy_array_data(self.data_transformation_config.transformed_test_file_path, array=test_arr)
+
+            logging.info("saving transformation object and transformed files.")
+
+            return DataTransformationArtifact(
+                transformed_object_file_path = self.data_transformation.config.transformed_object_file_path,
+                transformed_train_file_object = self.data_transformation.config.transformed_test_file_path,
+                transformed_test_file_path = self.data_transformation_config.transformed_test_file_path
+            )
+        except Exception as e:
+            raise MyException(e,sys) from e
+
+        
 
             
