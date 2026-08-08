@@ -18,7 +18,7 @@ PREPROCSSING_OBJECT_FILE_NAME = "preprocessing.pkl"
 FILE_NAME: str = 'data.csv'
 TRAIN_FILE_NAME = "train.csv"
 TEST_FILE_NAME = "test.csv"
-SCHEMA_FILE_PATH = os.path.join("config","schema.yaml")
+SCHEMA_FILE_PATH = os.path.join("config","schema.ymal")
 
 
 AWS_ACCESS_KEY_ID_ENV_KEY = "AWS_ACCESS_KEY_ID"
@@ -39,7 +39,7 @@ DATA_INGESTION_TRAIN_TEST_SPLIT_RATIO: float = 0.25
 Data Validation realted contant start with DATA_VALIDATION VAR NAME
 """
 DATA_VALIDATION_DIR_NAME: str = "data_validation"
-DATA_VALIDATION_REPORT_FILE_NAME: str = "report.yaml"
+DATA_VALIDATION_REPORT_FILE_NAME: str = "report.ymal"
 
 """
 Data Transformation ralated constant start with DATA_TRANSFORMATION VAR NAME
@@ -55,7 +55,7 @@ MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
 MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
 MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
-MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
+MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.ymal")
 MODEL_TRAINER_N_ESTIMATORS=200
 MODEL_TRAINER_MIN_SAMPLES_SPLIT: int = 7
 MODEL_TRAINER_MIN_SAMPLES_LEAF: int = 6

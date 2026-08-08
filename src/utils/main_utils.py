@@ -43,6 +43,21 @@ def load_object(file_path: str) -> object:
     except Exception as e:
         raise MyException(e,sys) from e
 
+def load_numpy_array_data(file_path: str) -> np.ndarray:
+    """
+    Load numpy array data from file.
+
+    file_path: location of the numpy array file
+    return: numpy array
+    """
+
+    try:
+        with open(file_path, "rb") as file_obj:
+            return np.load(file_obj)
+
+    except Exception as e:
+        raise MyException(e, sys) from e
+
 def save_numpy_array_data(file_path:str, array:np.array):
     """
     Save numpy array data to file

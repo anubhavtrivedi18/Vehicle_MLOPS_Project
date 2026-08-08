@@ -1,8 +1,7 @@
-from src.components.data_ingestion import DataIngestion
+from src.pipeline.training_pipeline import TrainPipeline
 
 if __name__ == "__main__":
-    data_ingestion = DataIngestion()
 
-    data_ingestion_artifact = data_ingestion.initiate_data_ingestion()
+    train_pipeline = TrainPipeline()
 
-    print(data_ingestion_artifact)
+    train_pipeline.run_pipeline()

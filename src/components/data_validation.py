@@ -8,7 +8,7 @@ from pandas import DataFrame
 
 from src.exception import MyException
 from src.logger import logging
-from src.utils.main_utils import read_yaml_file
+from src.utils.main_utils import read_yaml_files
 from src.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact
 from src.entity.config_entity import DatavalidationConfig
 from src.constant import DATA_VALIDATION_DIR_NAME, SCHEMA_FILE_PATH
@@ -32,7 +32,7 @@ class DataValidation:
         try:
             self.data_ingestion_artifact = data_ingestion_artifact
             self.data_validation_config = data_validation_config
-            self._schema_config = read_yaml_file(file_path=SCHEMA_FILE_PATH)
+            self._schema_config = read_yaml_files(file_path=SCHEMA_FILE_PATH)
 
         except Exception as e:
             raise MyException(e, sys) from e
@@ -68,7 +68,7 @@ class DataValidation:
             missing_numerical_columns = [ ]
             missing_categorical_columns = [ ]
 
-            for columns in self.schema_config["numerical_columns"]:
+            for columns in self._schema_config["numerical_columns"]:
                 if columns not in dataframe_columns:
                     missing_numerical_columns.append(columns)
 
@@ -76,7 +76,7 @@ class DataValidation:
                 logging.info(f"Missing numerical column: {missing_numerical_columns}")
 
 
-            for column in self.schema_config['categorical_columns']:
+            for column in self._schema_config['categorical_columns']:
                 if columns not in dataframe_columns:
                     missing_categorical_columns.append(columns)
 
